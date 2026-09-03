@@ -4,7 +4,7 @@
 
 ### -> [**Download the full GOOG dataset on getdata.finance**](https://getdata.finance/datasets/goog)
 
-**GOOG 3d OHLCV stocks historical data** — ultra high-quality 3d OHLCV for **Alphabet**. Clean `time, open, high, low, close, volume` CSV for backtesting, algorithmic trading and quantitative research.
+**GOOG 3d OHLCV stocks historical data** — ultra high-quality 3d OHLCV for **Alphabet**. Clean `datetime, open, high, low, close, volume` CSV for backtesting, algorithmic trading and quantitative research.
 
 ## Table of contents
 
@@ -22,12 +22,12 @@
 ## Why this dataset?
 
 - **Ultra high-quality 3d OHLCV** for **Alphabet** (US stocks)
-- **Clean CSV schema** — `time, open, high, low, close, volume` (no gaps in formatting)
+- **Clean CSV schema** — `datetime, open, high, low, close, volume` (no gaps in formatting)
 - **Free evaluation sample** on GitHub (`3d`) · **11 timeframes** on [getdata.finance](https://getdata.finance/datasets/goog) · **1,388** `3d` rows in the full archive
 - Built for **backtesting**, **algorithmic trading** and **quantitative finance** workflows
 - **Weekly refresh** — [getdata.finance](https://getdata.finance) every **Saturday, 8am UTC+0**; GitHub `3d` sample updated in sync
 
-> **Sample on GitHub** · `GOOG_3d.csv` (68 rows, `2026-02-09` -> `2026-09-01`, 4.13 KB). **Full archive on [getdata.finance](https://getdata.finance/datasets/goog)** — **1,388** `3d` rows (full `1m`: 635,127), **11 timeframes**, `2014-03-26` -> `2026-09-01`.
+> **Sample on GitHub** · `GOOG_3d.csv` (68 rows, `2026-02-09` -> `2026-09-01`, 4.14 KB). **Full archive on [getdata.finance](https://getdata.finance/datasets/goog)** — **1,388** `3d` rows (full `1m`: 635,127), **11 timeframes**, `2014-03-26` -> `2026-09-01`.
 
 ## Download sample
 
@@ -46,7 +46,7 @@ Full archive & live chart on getdata.finance: **[https://getdata.finance/dataset
 | Instrument | Alphabet · US stocks | Alphabet · US stocks |
 | Timeframes | `3d` (sample) | **11** — 1m · 3m · 5m · 15m · 30m · 1H · 4H · 12H · 1D · 3D · 1W |
 | 3d rows | 68 | **1,388** |
-| Size | 4.13 KB | full ZIP on [getdata.finance](https://getdata.finance/datasets/goog) |
+| Size | 4.14 KB | full ZIP on [getdata.finance](https://getdata.finance/datasets/goog) |
 | Period | `2026-02-09` -> `2026-09-01` | `2014-03-26` -> `2026-09-01` |
 | File | `GOOG_3d.csv` | ZIP on [getdata.finance](https://getdata.finance/datasets/goog) |
 | Coverage report | — | [GOOG coverage](https://getdata.finance/coverage/goog) |
@@ -73,7 +73,7 @@ First and latest rows from the GitHub sample **`GOOG_3d.csv`**:
 
 **First rows**
 
-| time | open | high | low | close | volume |
+| datetime | open | high | low | close | volume |
 | --- | --- | --- | --- | --- | --- |
 | 2026-02-09T00:00:00+00:00 | 323.03 | 327.59 | 310.01 | 310.95 | 263681 |
 | 2026-02-12T00:00:00+00:00 | 310.95 | 316.35 | 303.78 | 305.78 | 369140 |
@@ -83,7 +83,7 @@ First and latest rows from the GitHub sample **`GOOG_3d.csv`**:
 
 **Last rows**
 
-| time | open | high | low | close | volume |
+| datetime | open | high | low | close | volume |
 | --- | --- | --- | --- | --- | --- |
 | 2026-08-20T00:00:00+00:00 | 341.62 | 343.14 | 336.05 | 341.71 | 91813 |
 | 2026-08-23T00:00:00+00:00 | 341.71 | 347.88 | 339.2 | 342.51 | 79819 |
@@ -95,7 +95,7 @@ First and latest rows from the GitHub sample **`GOOG_3d.csv`**:
 
 | Column | Description |
 | --- | --- |
-| `time` | Bar open timestamp (UTC, ISO-8601). |
+| `datetime` | Bar open timestamp (UTC, ISO-8601). |
 | `open` | Opening price of the candlestick bar. |
 | `high` | Highest price during the bar. |
 | `low` | Lowest price during the bar. |
@@ -103,7 +103,7 @@ First and latest rows from the GitHub sample **`GOOG_3d.csv`**:
 | `volume` | Tick volume (number of price updates) during the bar. |
 
 ```text
-time,open,high,low,close,volume
+datetime,open,high,low,close,volume
 ```
 
 ## Code examples
@@ -113,8 +113,8 @@ time,open,high,low,close,volume
 ```python
 import pandas as pd
 
-df = pd.read_csv('GOOG_3d.csv', parse_dates=['time'])
-df.set_index('time', inplace=True)
+df = pd.read_csv('GOOG_3d.csv', parse_dates=['datetime'])
+df.set_index('datetime', inplace=True)
 print(df.describe())
 ```
 
@@ -124,8 +124,8 @@ print(df.describe())
 import backtrader as bt
 import pandas as pd
 
-df = pd.read_csv('GOOG_3d.csv', parse_dates=['time'])
-df.set_index('time', inplace=True)
+df = pd.read_csv('GOOG_3d.csv', parse_dates=['datetime'])
+df.set_index('datetime', inplace=True)
 
 class PandasData(bt.feeds.PandasData):
     params = (('datetime', None), ('open', 'open'), ('high', 'high'),
@@ -143,8 +143,8 @@ cerebro.adddata(PandasData(dataname=df))
 import pandas as pd
 import vectorbt as vbt
 
-df = pd.read_csv('GOOG_3d.csv', parse_dates=['time'])
-close = df.set_index('time')['close']
+df = pd.read_csv('GOOG_3d.csv', parse_dates=['datetime'])
+close = df.set_index('datetime')['close']
 fast, slow = vbt.MA.run(close, 10), vbt.MA.run(close, 50)
 entries = fast.ma_crossed_above(slow)
 exits = fast.ma_crossed_below(slow)
